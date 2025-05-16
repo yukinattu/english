@@ -221,9 +221,20 @@ if st.session_state.start_flg:
             ft.save_to_wav(llm_response_audio.content, audio_output_file_path)
 
         # 音声ファイルの読み上げ
+        import base64  # ファイル冒頭に追加済みでなければ追加
+
         with open(audio_output_file_path, "rb") as f:
             audio_bytes = f.read()
-            st.audio(audio_bytes, format="audio/wav")
+            audio_base64 = base64.b64encode(audio_bytes).decode()
+
+            audio_html = f"""
+            <audio autoplay controls>
+                <source src="data:audio/wav;base64,{audio_base64}" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+            """
+            st.markdown(audio_html, unsafe_allow_html=True)
+
 
         # AIメッセージの画面表示とリストへの追加
         with st.chat_message("assistant", avatar=ct.AI_ICON_PATH):
