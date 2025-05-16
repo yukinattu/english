@@ -221,7 +221,9 @@ if st.session_state.start_flg:
             ft.save_to_wav(llm_response_audio.content, audio_output_file_path)
 
         # 音声ファイルの読み上げ
-        ft.play_wav(audio_output_file_path, speed=st.session_state.speed)
+        with open(audio_output_file_path, "rb") as f:
+            audio_bytes = f.read()
+            st.audio(audio_bytes, format="audio/wav")
 
         # AIメッセージの画面表示とリストへの追加
         with st.chat_message("assistant", avatar=ct.AI_ICON_PATH):
